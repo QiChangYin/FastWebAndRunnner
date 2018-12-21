@@ -11,6 +11,13 @@ from fastrunner.utils import prepare
 from fastrunner.utils.runner import DebugCode
 from fastrunner.utils.tree import get_tree_max_id, get_file_size
 
+# 展示对象列表（比如所有用户，所有文章）- ListView
+# 展示某个对象的详细信息（比如用户资料，比如文章详情) - DetailView
+# 通过表单创建某个对象（比如创建用户，新建文章）- CreateView
+# 通过表单更新某个对象信息（比如修改密码，修改文字内容）- UpdateView
+# 用户填写表单后转到某个完成页面 - FormView
+# 删除某个对象 - DeleteView
+
 
 class ProjectView(GenericViewSet):
     """
@@ -20,14 +27,20 @@ class ProjectView(GenericViewSet):
     queryset = models.Project.objects.all().order_by('-update_time')
     serializer_class = serializers.ProjectSerializer
     pagination_class = pagination.MyCursorPagination
-
+    print(len(queryset))
+    print(serializer_class)
+    print(pagination_class)
     def list(self, request):
         """
         查询项目信息
         """
 
+
         projects = self.get_queryset()
+        # 返回所有的列表
+        # 该方法可以返回一个量身定制的对象列表。当我们使用Django自带的ListView展示所有对象列表时，ListView默认会返回Model.objects.all()。
         page_projects = self.paginate_queryset(projects)
+
         serializer = self.get_serializer(page_projects, many=True)
         return self.get_paginated_response(serializer.data)
 
@@ -89,6 +102,7 @@ class ProjectView(GenericViewSet):
             return Response(response.PROJECT_DELETE_SUCCESS)
         except ObjectDoesNotExist:
             return Response(response.SYSTEM_ERROR)
+
 
     def single(self, request, **kwargs):
         """
@@ -169,6 +183,9 @@ class TreeView(APIView):
         """
 
         try:
+            print(request.query_params['type'])
+            for k,v in kwargs.items():
+                print(k,v)
             tree_type = request.query_params['type']
             tree = models.Relation.objects.get(project__id=kwargs['pk'], type=tree_type)
         except KeyError:
@@ -177,7 +194,10 @@ class TreeView(APIView):
         except ObjectDoesNotExist:
             return Response(response.SYSTEM_ERROR)
 
+        print(tree)
+        print(type(tree))
         body = eval(tree.tree) # list
+        print(body)
         tree = {
             "tree": body,
             "id": tree.id,
