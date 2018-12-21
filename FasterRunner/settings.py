@@ -138,6 +138,10 @@ REST_FRAMEWORK = {
                                'rest_framework.parsers.FileUploadParser',
                                ],
     'DEFAULT_PAGINATION_CLASS': 'FasterRunner.pagination.MyPageNumberPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
 }
 
 CORS_ALLOW_CREDENTIALS = True

@@ -8,7 +8,7 @@ import logging
 from fastuser.common.token import generate_token
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
-
+# ObjectDoesNotExistfrom django.core
 logger = logging.getLogger('FastRunner')
 
 
@@ -16,6 +16,8 @@ class RegisterView(APIView):
 
     authentication_classes = ()
     permission_classes = ()
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    # permission_classes = (IsAuthenticated,)
 
     """
     注册:{
@@ -40,10 +42,13 @@ class RegisterView(APIView):
         if models.UserInfo.objects.filter(email=email).first():
             return Response(response.REGISTER_EMAIL_EXIST)
 
+        # 此处采用django自带的方法来加密
         request.data["password"] = make_password(password)
 
+        print(type(request.data["password"]))
         serializer = serializers.UserInfoSerializer(data=request.data)
-
+        print(type(serializer))
+        print(serializer.is_valid())
         if serializer.is_valid():
             serializer.save()
             return Response(response.REGISTER_SUCCESS)
@@ -81,7 +86,7 @@ class LoginView(APIView):
             return Response(response.LOGIN_FAILED)
 
         token = generate_token(username)
-
+        print(token)
         try:
             models.UserToken.objects.update_or_create(user=user, defaults={"token": token})
         except ObjectDoesNotExist:
