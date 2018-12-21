@@ -25,7 +25,8 @@ class APITemplateView(GenericViewSet):
 
         node = request.query_params["node"]
         project = request.query_params["project"]
-
+        print(node)
+        print(project)
         queryset = self.get_queryset().filter(project__id=project, relation=node).order_by('-update_time')
         pagination_queryset = self.paginate_queryset(queryset)
         serializer = self.get_serializer(pagination_queryset, many=True)
