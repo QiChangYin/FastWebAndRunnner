@@ -74,6 +74,8 @@ class LoginView(APIView):
         try:
             username = request.data["username"]
             password = request.data["password"]
+
+        # 此处的高明出在捕获keyError不存在的时候,那么就是搓蛋
         except KeyError:
             return Response(response.KEY_MISS)
 
@@ -89,6 +91,7 @@ class LoginView(APIView):
         print(token)
         try:
             models.UserToken.objects.update_or_create(user=user, defaults={"token": token})
+        # 此处的意义很重大的,可以捕获对象不存在的错误
         except ObjectDoesNotExist:
             return Response(response.SYSTEM_ERROR)
         else:

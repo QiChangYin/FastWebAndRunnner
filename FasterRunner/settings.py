@@ -29,6 +29,7 @@ ALLOWED_HOSTS = ['*']
 # Token Settings
 INVALID_TIME = 60 * 60
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -55,6 +56,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'FasterRunner.urls'
+ROOT_URLCONF = 'FasterRunner.urls'
+
+TEMPLATES = [
+
+]
 
 TEMPLATES = [
     {

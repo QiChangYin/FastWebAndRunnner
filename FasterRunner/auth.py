@@ -13,6 +13,13 @@ class Authenticator(BaseAuthentication):
     """
 
     def authenticate(self, request):
+        # 前面request.query_params是获取查询字符串参数，后面加个.dict()  没看懂，就自己实验了一下
+        # request.query_params
+        # 这个获取的类型是
+        # django里面的 QueryDict
+        # 类型，后面加.dict()
+        # 是转变成
+        # python中字典格式。
         token = request.query_params.get("token", None)
         obj = models.UserToken.objects.filter(token=token).first()
 
@@ -36,6 +43,7 @@ class Authenticator(BaseAuthentication):
         # valid update valid time
         obj.token = token
         obj.save()
+        # 发送到数据库
 
         return obj.user, obj
 

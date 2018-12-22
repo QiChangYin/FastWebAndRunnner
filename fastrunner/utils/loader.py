@@ -35,11 +35,21 @@ def is_function(tup):
     name, item = tup
     return isinstance(item, types.FunctionType)
 
+    # def _start(self, spin):
+    #     for args, kwargs in self.subscribers:
+    #         self.subscribers_init.append(rospy.Subscriber(*args, **kwargs))
+    #     is_func = isinstance(self.cl, types.FunctionType
+
 
 def is_variable(tup):
     """ Takes (name, object) tuple, returns True if it is a variable.
     """
     name, item = tup
+    # callable()
+    # 函数用于检查一个对象是否是可调用的。如果返回True，object仍然可能调用失败；
+    # 但如果返回False，调用对象ojbect绝对不会成功。
+    # 对于函数, 方法, lambda 函式, 类, 以及实现了 __call__
+    # 方法的类实例, 它都返回 True。
     if callable(item):
         # function or class
         return False
@@ -106,12 +116,15 @@ class FileLoader(object):
             "functions": {}
         }
 
+        # importlib模块
+        # 以字符串的形式导入模块
         sys.path.insert(0, file_path)
         module = importlib.import_module("debugtalk")
         # 修复重载bug
         importlib.reload(module)
         sys.path.pop(0)
 
+        # vars() 函数返回对象object的属性和属性值的字典对象。
         for name, item in vars(module).items():
             if is_function((name, item)):
                 debugtalk_module["functions"][name] = item
@@ -184,6 +197,7 @@ def load_debugtalk(project):
     debugtalk = FileLoader.load_python_module(os.path.dirname(file_path))
 
     shutil.rmtree(os.path.dirname(file_path))
+    # shutil.rmtree(os.path.dirname(file_path))
     return debugtalk
 
 

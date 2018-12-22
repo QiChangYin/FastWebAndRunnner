@@ -39,3 +39,12 @@ class UserToken(BaseTable):
 
     user = models.OneToOneField(to=UserInfo, on_delete=models.CASCADE)
     token = models.CharField('token', max_length=50)
+
+
+class UserToken(BaseTable):
+    class Meta:
+        verbose_name = "用户登录token"
+        db_table = "UserToken"
+
+    user = models.OneToOneField(to=UserInfo, on_delete=models.CASCADE)
+    token = models.CharField("token", max_length=50)
